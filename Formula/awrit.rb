@@ -5,16 +5,26 @@ class Awrit < Formula
   sha256 "68503130ca8c739acec4b774db8c2a48143aafdfe68b77ae77c509f9ba80a96c"
   license "BSD-3-Clause"
 
+  depends_on "oven-sh/bun/bun"
+  depends_on "rust" => :build
+
   def install
     libexec.install Dir["*"]
+    cd libexec do
+      # Install JS dependencies and build native module
+      system "bun", "install"
+    end
+    # Wrapper that uses Homebrew's bun to run the TypeScript runner
     (bin/"awrit").write <<~SH
       #!/usr/bin/env bash
       set -e
-      exec "#{libexec}/awrit" ""
+      cd "#{libexec}"
+      exec "$(which bun)" run "#{libexec}/src/runner" "$@"
     SH
   end
 
   test do
-    assert_match "awrit", shell_output("#{bin}/awrit --help", 0)
+    output = shell_output("#{bin}/awrit --help")
+    assert_match "Usage:", output
   end
 end
