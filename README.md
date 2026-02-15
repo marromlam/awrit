@@ -25,6 +25,13 @@ By default, this will download to `~/awrit` and link to `~/.local/bin/awrit`.
 
 You can configure `awrit` by changing `~/awrit/config.js`. See [Configuration](#configuration) for more information.
 
+### Homebrew (Tap)
+
+```bash
+brew tap marromlam/awrit
+brew install awrit
+```
+
 #### (Optional) Change Download Location or Install Prefix
 
 ``` bash
